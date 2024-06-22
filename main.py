@@ -1,6 +1,6 @@
 from flet import *
 
-from mock.mock import MockData
+# from mock.mock import MockData
 from page.home import Home
 from page.login import Login
 from page.chatroom import ChatRoom
