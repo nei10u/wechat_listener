@@ -1,21 +1,22 @@
 import time
+
 from firebase_config import initialize_firebase
-from service.imtool.common.singleton import singleton
 from service.imtool.lib import itchat
+
+db = initialize_firebase()
 
 
 # @singleton
 class MessageHandler:
 
-    def __init__(self, chatroom):
+    def __init__(self, chatroom=None):
         self.chatroom = chatroom
         self.stream = None
-        self.db = initialize_firebase()
         self.session_id = itchat.instance.storageClass.nickName
 
     def get_message_val(self, *args):
         session_id = itchat.instance.storageClass.nickName
-        fn = self.db.child(session_id)
+        fn = db.child(session_id)
         for arg in args:
             fn.child(arg)
         return fn.get().val()
@@ -50,7 +51,7 @@ class MessageHandler:
             to_user_id = cmsg.other_user_nickname if cmsg.is_group else cmsg.to_user_nickname
             print(f"session_id:{self.session_id}")
             print(f"data:{data}")
-            self.db.child(self.session_id).child(to_user_id).child(int(time.time())).set(data)
+            db.child(self.session_id).child(to_user_id).child(int(time.time())).set(data)
         except Exception as e:
             print(e)
 
@@ -64,7 +65,7 @@ class MessageHandler:
         self.chatroom.render_chat_arena(items)
 
     def start_listener(self, group_name):
-        self.stream = self.db.child(self.session_id).child(group_name).stream(self.chatroom.chat_stream)
+        self.stream = db.child(self.session_id).child(group_name).stream(self.chatroom.chat_stream)
 
 # if __name__ == "__main__":
 #     MessageHandler("test", "1234567890", "USER").push_message_to_db()
