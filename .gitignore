@@ -1,0 +1,9 @@
+/mock/
+/tmp/
+/venv/
+output.txt
+run.log
+config.json
+.DS_Store
+.idea/
+__pycache__/
